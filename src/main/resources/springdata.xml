@@ -1,10 +1,62 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:jpa="http://www.springframework.org/schema/data/jpa"
 	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
 	 http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
 	 http://www.springframework.org/schema/context
-	 http://www.springframework.org/schema/context/spring-context-4.3.xsd">
-	 <context:component-scan base-package="org.gege.mvc"></context:component-scan>
+	 http://www.springframework.org/schema/context/spring-context-4.3.xsd
+	 http://www.springframework.org/schema/tx
+	 http://www.springframework.org/schema/tx/spring-tx-4.3.xsd
+	 http://www.springframework.org/schema/data/jpa
+	 http://www.springframework.org/schema/data/jpa/spring-jpa-1.8.xsd">
+	 <jpa:repositories base-package="org.geg.repositories"/>
+	 
+	 <!-- 配置EntityManagerFactory,JPA 实体管理器工厂-->
+	 <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+	 	<property name="dataSource" ref="dataSource"></property>
+	 	<!-- 适配器 -->
+		<property name="jpaVendorAdapter">
+		<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"></bean>
+		</property>
+		<!-- 配置:到指定包里面去找  实体类位置-->
+		<property name="packagesToScan" value="org.gege.entity"></property>
+		<property name="jpaProperties">
+		<props>
+			<!-- 二级缓存相关 -->
+			<!-- 
+			<prop key="hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.EhCacheRegionFactory</prop>
+			<prop key="net.sf.ehcache.configurationResourceName">ehcache-hibernate.xml</prop>
+			-->
+			<!-- 生成的数据表的列的映射策略 -->
+			<!-- <prop key="hibernate.ejb.naming_strategy">org.hibernate.cfg.ImprovedNamingStrategy</prop> -->
+			<!-- hibernate 基本属性 -->
+			<!-- 配置的是MYSQL的 -->
+			<!-- <prop key="hibernate.dialect">org.hibernate.dialect.MySQL5InnoDBDialect</prop> -->
+			<!-- 配置的是SQLServer的 -->
+			<prop key="hibernate.dialect">${hibernate.dialect}</prop>
+			<!--激活查询日志功能-->
+			<prop key="hibernate.show_sql">${hibernate.show_sql}</prop>
+			<!--优雅地输出Sql-->
+			<prop key="hibernate.format_sql">${hibernate.format_sql}</prop>
+			<!--配置如何根据java模型生成数据库表结构,常用update,validate-->
+			  <!-- 如果数据库中没有这张表，将自动生成 -->
+			<prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</prop>
+		</props>
+		</property>
+	 </bean>
+	 
+	 <!--配置事务管理器 -->
+     <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+		<property name="entityManagerFactory" ref="entityManagerFactory"></property>
+	 </bean>
+	 
+	 <!--4. 配置支持注解的事务 -->
+     <tx:annotation-driven transaction-manager="transactionManager"/> 
+	 <!--5. 配置springdata -->
+     <!-- 加入  jpa 的命名空间 ：entity持久层的 -->
+     <!-- base-package: 扫描 Repository Bean 所在的 package -->
+    
 </beans>
