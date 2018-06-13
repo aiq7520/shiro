@@ -1,12 +1,9 @@
 package org.gege.repositories;
 
 import org.gege.entity.User;
-import org.springframework.data.repository.RepositoryDefinition;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.repository.CrudRepository;
 
-@Repository
-@RepositoryDefinition(domainClass=User.class,idClass=Integer.class)
-public interface UserRepository {
+
+public interface UserRepository extends CrudRepository<User,Integer> {
 	public User getByUsername(String username);
-	
 }

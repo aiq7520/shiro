@@ -1,4 +1,4 @@
-package org.gege.repositories;
+package org.gege.service;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,16 +13,10 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
 @ContextConfiguration("/spring.xml")
 @RunWith(SpringJUnit4ClassRunner.class)
-public class UserReponsitoryTest {
-	@Autowired UserRepository userRepository;
-	@Test
-	public void testGetByUsername(){
-		User user = userRepository.getByUsername("zhangsan");
-		System.out.println(user);
-	}
+public class UserServiceTest {
+	@Autowired UserService userService;
 	@Test
 	public void testSaveUser() throws IOException{
 		String filename = Utils.readProperity("file.path");
@@ -30,8 +24,7 @@ public class UserReponsitoryTest {
 		List<User> users = new ArrayList<User>();
 		for (String username : lines) 
 			users.add(new User(username,"123456"));
-		
-		userRepository.saveAll(users);
-		throw new RuntimeException("test");
+		userService.saveAll(users);
+		//throw new RuntimeException("test");
 	}
 }

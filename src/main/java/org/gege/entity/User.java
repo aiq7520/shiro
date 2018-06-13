@@ -1,19 +1,30 @@
 package org.gege.entity;
 
+import java.io.Serializable;
+import java.util.List;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
+
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
-
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+@Table(name="SHIRO_USER")
+@Entity
 public class User implements Serializable {
 	private static final long serialVersionUID = 1L;
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id; //编号
     private Long organizationId; //所属公司
     private String username; //用户名
     private String password; //密码
     private String salt; //加密密码的盐
-    private List<Long> roleIds; //拥有的角色列表
+    @ManyToMany
+    private List<Role> roles; //拥有的角色列表
     private Boolean locked = Boolean.FALSE;
 
     public User() {
@@ -68,25 +79,24 @@ public class User implements Serializable {
         return username + salt;
     }
 
-    public List<Long> getRoleIds() {
-        if(roleIds == null) {
-            roleIds = new ArrayList<Long>();
-        }
-        return roleIds;
-    }
-
-    public void setRoleIds(List<Long> roleIds) {
-        this.roleIds = roleIds;
-    }
+  
 
 
-    public String getRoleIdsStr() {
-        if(CollectionUtils.isEmpty(roleIds)) {
+    public List<Role> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(List<Role> roles) {
+		this.roles = roles;
+	}
+
+	public String getRoleIdsStr() {
+        if(CollectionUtils.isEmpty(roles)) {
             return "";
         }
         StringBuilder s = new StringBuilder();
-        for(Long roleId : roleIds) {
-            s.append(roleId);
+        for(Role role : roles) {
+            s.append(role.getId());
             s.append(",");
         }
         return s.toString();
@@ -101,7 +111,7 @@ public class User implements Serializable {
             if(StringUtils.isEmpty(roleIdStr)) {
                 continue;
             }
-            getRoleIds().add(Long.valueOf(roleIdStr));
+           this.roles.add(new Role(Long.parseLong(roleIdStr)));
         }
     }
     
@@ -138,7 +148,6 @@ public class User implements Serializable {
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 ", salt='" + salt + '\'' +
-                ", roleIds=" + roleIds +
                 ", locked=" + locked +
                 '}';
     }
