@@ -44,7 +44,7 @@ public class Shiro01Test {
 	public void shiro001(){
 		log.info("My First Apache Shiro Application");
 		//1、获取SecurityManager工厂，此处使用Ini配置文件初始化SecurityManager  
-	    Factory<SecurityManager> factory = new IniSecurityManagerFactory("classpath:shiro/shirouserdata.ini");
+	    Factory<SecurityManager> factory = new IniSecurityManagerFactory("classpath:shiro/charpter/shirouserdata.ini");
 
 	    //2.得到SecurityManager实例 并绑定给SecurityUtils 
 	    SecurityManager securityManager = factory.getInstance();
@@ -71,7 +71,7 @@ public class Shiro01Test {
 	public void shiro002(){
 //		login("classpath:shiro/shirosetrealm.ini","纪阁", "123456");//realm全部通过
 //		login("classpath:shiro/shirosetrealm.ini","刘冬霞", "123456");//第一个通过
-		login("classpath:shiro/shirosetrealm.ini","刘冬霞", "123456");//第一个通过
+		login("classpath:shiro/charpter/shirosetrealm.ini","刘冬霞", "123456");//第一个通过
 		Assert.assertEquals(true,  SecurityUtils.getSubject().isAuthenticated()); //断言用户已经登录
 		//6、退出
 		 SecurityUtils.getSubject().logout();
@@ -82,7 +82,7 @@ public class Shiro01Test {
 	 */
 	@Test(expected = UnauthorizedException.class)  
 	public void shiro003(){
-		login("classpath:shiro/shirouserdata.ini","root", "secret");
+		login("classpath:shiro/charpter/shirouserdata.ini","root", "secret");
 		log.info("My First Apache Shiro Application");
 	    Assert.assertEquals(true,  SecurityUtils.getSubject().isAuthenticated()); //断言用户已经登录
 	    
