@@ -1,4 +1,4 @@
-package org.gege.shiro.realms;
+package org.gege.shiro.chapter1.realms;
 
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
