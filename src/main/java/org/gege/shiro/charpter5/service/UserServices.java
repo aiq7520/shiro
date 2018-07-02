@@ -2,6 +2,7 @@ package org.gege.shiro.charpter5.service;
 
 import javax.transaction.Transactional;
 
+import org.gege.shiro.charpter5.dao.ShiroDao;
 import org.gege.shiro.charpter5.entity.User;
 import org.gege.shiro.charpter5.repositories.UserRepository;
 import org.gege.utils.PasswordHelper;
@@ -14,6 +15,8 @@ public class UserServices {
 
 	@Autowired
 	private UserRepository userRepository;
+	@Autowired
+	private ShiroDao shiroDao;
 	PasswordHelper passwordHelper = new PasswordHelper();
 	
 	public User save(User u){
@@ -30,5 +33,9 @@ public class UserServices {
 	}
 	public User findByUsername(String username){
 		return userRepository.findByUsername(username);
+	}
+
+	public int  correlationRoles(Integer id, Integer id2) {
+		return shiroDao.correlationRoles(id, id2);
 	}
 }

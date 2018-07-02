@@ -1,5 +1,8 @@
 package org.gege.shiro.charpter5.realm;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -7,9 +10,12 @@ import org.apache.shiro.authc.LockedAccountException;
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authz.AuthorizationInfo;
+import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.ByteSource;
+import org.gege.shiro.charpter5.entity.Permission;
+import org.gege.shiro.charpter5.entity.Role;
 import org.gege.shiro.charpter5.entity.User;
 import org.gege.shiro.charpter5.service.UserServices;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +26,20 @@ public class UserRealm extends  AuthorizingRealm {
 	@Override
 	protected AuthorizationInfo doGetAuthorizationInfo(
 			PrincipalCollection principals) {
-		return null;
+		SimpleAuthorizationInfo suthorizationInfo = new SimpleAuthorizationInfo();
+		String username = (String)principals.getPrimaryPrincipal();
+		User user = userService.findByUsername(username);  
+		Set<Role> roles = user.getRoles();
+		Set<String> roleNames = new HashSet<>();
+		
+		for (Role role : roles) {
+			roleNames.add(role.getRole());
+			Set<Permission> permissions = role.getPermissions();
+			for (Permission permission : permissions) 
+				suthorizationInfo.addStringPermission(permission.getPermission());
+		}
+		suthorizationInfo.addRoles(roleNames);
+		return suthorizationInfo;
 	}
 
 	@Override

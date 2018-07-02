@@ -1,11 +1,18 @@
 package org.gege.shiro.charpter5.entity;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 /**
@@ -17,11 +24,15 @@ import javax.persistence.Table;
 public class Permission implements Serializable {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
-    private Long id;
+    private Integer id;
     private String permission; //权限标识 程序中判断使用,如"user:create"
     private String description; //权限描述,UI界面显示使用
     private Boolean available = Boolean.FALSE; //是否可用,如果不可用将不会添加给用户
-
+    @ManyToMany(cascade=CascadeType.PERSIST,fetch=FetchType.LAZY)
+    @JoinTable(name="SYS_ROLES_PERMISSIONS",joinColumns={
+    		@JoinColumn(name="PERMISSION_ID",referencedColumnName="id")},
+    		inverseJoinColumns={@JoinColumn(name = "ROLE_ID", referencedColumnName ="id")})
+    private Set<Role> roles = new HashSet<Role>();
     public Permission() {
     }
 
@@ -31,15 +42,7 @@ public class Permission implements Serializable {
         this.available = available;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getPermission() {
+	public String getPermission() {
         return permission;
     }
 
@@ -62,8 +65,15 @@ public class Permission implements Serializable {
     public void setAvailable(Boolean available) {
         this.available = available;
     }
+    public Integer getId() {
+		return id;
+	}
 
-    @Override
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	@Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -75,7 +85,15 @@ public class Permission implements Serializable {
         return true;
     }
 
-    @Override
+    public Set<Role> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(Set<Role> roles) {
+		this.roles = roles;
+	}
+
+	@Override
     public int hashCode() {
         return id != null ? id.hashCode() : 0;
     }

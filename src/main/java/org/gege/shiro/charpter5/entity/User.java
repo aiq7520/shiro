@@ -1,8 +1,8 @@
 package org.gege.shiro.charpter5.entity;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -28,8 +28,8 @@ public class User implements Serializable {
 
     private Boolean locked = Boolean.FALSE;
     
-    @ManyToMany(fetch = FetchType.LAZY,mappedBy="users")
-    private List<Role> roles = new ArrayList<Role>();
+    @ManyToMany(fetch = FetchType.EAGER,mappedBy="users")
+    private Set<Role> roles = new HashSet<Role>();
 
     public User() {
     }
@@ -97,16 +97,19 @@ public class User implements Serializable {
         return true;
     }
 
-    @Override
+	public Set<Role> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(Set<Role> roles) {
+		this.roles = roles;
+	}
+
+	@Override
     public int hashCode() {
         return id != null ? id.hashCode() : 0;
     }
-    public List<Role> getRoles() {
-		return roles;
-	}
-	public void setRoles(List<Role> roles) {
-		this.roles = roles;
-	}
+ 
 
 	@Override
     public String toString() {

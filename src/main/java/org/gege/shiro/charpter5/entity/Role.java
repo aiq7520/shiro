@@ -1,8 +1,8 @@
 package org.gege.shiro.charpter5.entity;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -24,7 +24,7 @@ import javax.persistence.Table;
 public class Role implements Serializable {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
-    private Long id;
+    private Integer id;
     private String role; //角色标识 程序中判断使用,如"admin"
     private String description; //角色描述,UI界面显示使用
     private Boolean available = Boolean.FALSE; //是否可用,如果不可用将不会添加给用户
@@ -33,7 +33,11 @@ public class Role implements Serializable {
     @JoinTable(name = "sys_users_roles",joinColumns = {//中间表名称
     		@JoinColumn(name = "Role_ID", referencedColumnName = "id")},//中间表对应此表外键的名称
     		inverseJoinColumns = {@JoinColumn(name = "User_ID", referencedColumnName ="id")})
-    private List<User> users = new ArrayList<User>();
+    private Set<User> users = new HashSet<User>();
+    
+    @ManyToMany(fetch=FetchType.EAGER,mappedBy="roles")
+    private Set<Permission> permissions = new HashSet<Permission>();
+    
     
     public Role() {
     }
@@ -43,16 +47,15 @@ public class Role implements Serializable {
         this.description = description;
         this.available = available;
     }
+    public Integer getId() {
+		return id;
+	}
 
-    public Long getId() {
-        return id;
-    }
+	public void setId(Integer id) {
+		this.id = id;
+	}
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getRole() {
+	public String getRole() {
         return role;
     }
 
@@ -76,11 +79,13 @@ public class Role implements Serializable {
         this.available = available;
     }
 
-    public List<User> getUsers() {
+   
+
+	public Set<User> getUsers() {
 		return users;
 	}
 
-	public void setUsers(List<User> users) {
+	public void setUsers(Set<User> users) {
 		this.users = users;
 	}
 
@@ -95,8 +100,15 @@ public class Role implements Serializable {
 
         return true;
     }
+    public Set<Permission> getPermissions() {
+		return permissions;
+	}
 
-    @Override
+	public void setPermissions(Set<Permission> permissions) {
+		this.permissions = permissions;
+	}
+
+	@Override
     public int hashCode() {
         return id != null ? id.hashCode() : 0;
     }

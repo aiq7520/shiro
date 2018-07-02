@@ -1,7 +1,5 @@
 package org.gege.shiro.charpter5.dao;
 
-import java.sql.SQLException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -12,7 +10,7 @@ public class ShiroDao {
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 	 //添加角色-权限之间关系  
-    public int correlationPermissions(long roleId, long... permissionIds) throws SQLException{
+    public int correlationPermissions(long roleId, long... permissionIds) {
     	Object[] params = new Object[permissionIds.length*2];
     	StringBuffer sql = new StringBuffer("INSERT INTO SYS_ROLES_PERMISSIONS(role_Id,permission_Id) VALUES ");
     	for (int i=0;i<permissionIds.length;i++){
@@ -38,7 +36,7 @@ public class ShiroDao {
     	return jdbcTemplate.update(sql.toString(), params);
     }
   //添加用户-角色关系  
-    public int correlationRoles(Long userId, Long... roleIds){
+    public int correlationRoles(long userId, long... roleIds){
     	Object[] params = new Object[roleIds.length*2];
     	StringBuffer sql = new StringBuffer("INSERT INTO SYS_USERS_ROLES(user_Id,role_Id) VALUES ");
     	for (int i=0;i<roleIds.length;i++){
@@ -51,7 +49,7 @@ public class ShiroDao {
     	return  jdbcTemplate.update(sql.toString(), params);
     } 
  // 移除用户-角色关系 
-    public int uncorrelationRoles(Long userId, Long... roleIds){
+    public int uncorrelationRoles(long userId, long... roleIds){
     	Object[] params = new Object[roleIds.length*2];
     	StringBuffer sql = new StringBuffer("DELETE FROM  SYS_USERS_ROLES WHERE ");
     	for (int i=0;i<roleIds.length;i++){
