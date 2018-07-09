@@ -31,7 +31,8 @@ public class RealmTest {
 	    public void testCheckPermissionMyImpl () {  
 	    	login("zhang","123");  
 	        Subject subject = SecurityUtils.getSubject();
-	        System.out.println(subject.isAuthenticated());
+	        //isAuthenticated/isRemembered是互斥的，即如果其中一个返回true，另一个返回false。
+	        System.out.println(subject.isAuthenticated());//
 	    }
 	   @Test
 	   public void testHasRole () {  

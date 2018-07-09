@@ -71,4 +71,7 @@ public class EncodeTest {
 		  
 		Assert.assertEquals(text, text2); 
 	}
+	
+	
+	//
 }
